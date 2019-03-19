@@ -45,6 +45,9 @@ spock = ["spock", "sp"]
 
 gameElts = ["rock", "paper", "scissors", "lizard", "spock"]
 
+computerName = "Computer"
+playerName = "Player"
+
 def choiceToName(choice):
     if choice in rock:
         result = rock[0].capitalize()
@@ -79,15 +82,15 @@ def loadHistory():
 
 
 def displayHistory():
-    if numberOfGames % 5 == 0 and numberOfGames > 0:
+    if True: #numberOfGames % 5 == 0 and numberOfGames > 0:
         vHistory = input("Do you want to view your game history? (y/n)")
         if vHistory == "y":
             print("Your game history:")
             print("*" * 20)
-            for h in historyData:
-                print(f"W:{h['wld']['w']} L:{h['wld']['l']} D:{h['wld']['d']}")
-                print(h["history"])
 
+            print(f"W:{historyData['wld']['w']} L:{historyData['wld']['l']} D:{historyData['wld']['d']}")
+            for h in historyData["history"]:
+                print(h)
 def writeHistory():
     with open(historyFile, 'w') as outfile:
         json.dump(historyData, outfile)
@@ -98,7 +101,7 @@ def getValidChoice():
     while not validChoice:
         choicePrompt = "rock (r), paper (p), scissors (s), lizard (l), spock (sp)? "
         print("*" * len(choicePrompt))
-        choice = choiceToName(input(choicePrompt))
+        choice = choiceToName(input(choicePrompt)).capitalize()
         if choice is not None:
             validChoice = True
     return choice
@@ -134,28 +137,26 @@ numberOfGames = 0
 
 while isRunning:
     displayHistory()
-
-
-
     playerChoice = getValidChoice()
-    computerChoice = numberToName(random.randint(0, len(gameElts)-1))
-
-    print(f"{playerChoice} v {computerChoice}")
+    computerChoice = numberToName(random.randint(0, len(gameElts)-1)).capitalize()
+    prompt = (f"{playerChoice} v {computerChoice}")
+    print(prompt)
+    print("*" * len(prompt))
     outcome = ""
     if playerChoice == computerChoice:
         outcome = (f"{playerChoice} v {computerChoice}: Draw")
-        wld["d"] += 1
+        historyData["wld"]["d"] += 1
     elif (playerChoice, computerChoice) in outcomes:
-        outcome = (f'You win! {playerChoice} {outcomes[playerChoice, computerChoice]} {computerChoice}.')
-        wld["w"] += 1
+        outcome = (f'{playerName} win! {playerChoice} {outcomes[playerChoice, computerChoice]} {computerChoice}.')
+        historyData["wld"]["w"] += 1
     elif (computerChoice, playerChoice) in outcomes:
-        outcome = 'I win! {computerChoice} {outcomes[computerChoice, playerChoice]} {playerChoice}.'
-        wld["l"] += 1
+        outcome = (f'{computerName} wins! {computerChoice} {outcomes[computerChoice, playerChoice]} {playerChoice}.')
+        historyData["wld"]["l"] += 1
     else:
         outcome = (f'Invalid choice {playerChoice}')
     print(outcome)
-    historyList.append(outcome)
-    print(f"You have {wld['w']} wins and {wld['l']} losses and {wld['d']} draws")
+    historyData["history"].append(outcome)
+    print(f"You have {historyData['wld']['w']} wins and {historyData['wld']['l']} losses and {historyData['wld']['d']} draws")
     numberOfGames += 1
     again = input("Do you want to play again? (y/n) ")
     if again == "n":

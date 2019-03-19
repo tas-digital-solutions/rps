@@ -1,1 +1,1 @@
-{"wld": {"w": 0, "l": 0, "d": 0}, "history": []}
+{"wld": {"w": 1, "l": 2, "d": 1}, "history": ["Computer wins! Paper covers Rock.", "Player win! Rock crushes Lizard."]}
